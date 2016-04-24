@@ -27,7 +27,16 @@ public class PaintView extends View {
     private Paint mPaint;
     private Path mPath;
 
+    /**
+     * We use a Sparse Array to store pointers by mapping their IDs (integer)
+     * with their coordinates (PointF)
+     * We should use Sparse Array instead of HashMap because it is optimized by Android
+     */
     private SparseArray<PointF> mActivePointer;
+
+    /**
+     * We use this array to store the colors (total of 6) of the touch points
+     */
     private int [] colors = {
         Color.BLUE, Color.GREEN, Color.MAGENTA,
         Color.BLACK, Color.CYAN, Color.GRAY
@@ -55,6 +64,9 @@ public class PaintView extends View {
         init();
     }
 
+    /**
+     * We should have a function to initialize the resource
+     */
     private void init() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 //        mPaint.setStyle(Paint.Style.STROKE);
@@ -70,9 +82,13 @@ public class PaintView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        // With each active pointer we draw the corresponding circle at its location
         int size = mActivePointer.size();
         for(int i = 0; i < size; i++) {
             PointF pointF = mActivePointer.valueAt(i);
+
+            // With each point we draw with a different color.
+            // Notice that we only have 6 different colors
             mPaint.setColor(colors[i % 6]);
             canvas.drawCircle(pointF.x, pointF.y, mStrokeWidth, mPaint);
         }
